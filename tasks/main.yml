@@ -1,0 +1,14 @@
+---
+# tasks file for ansible_galaxy_role_ghq-peco-alias_linux
+
+- name: "ghq-peco-alias | add command alias"
+  ignore_errors: "{{ ansible_check_mode }}"
+  shell:
+    cmd: |
+      cat $HOME/.bashrc | grep -E "^alias gp='cd \\$\(ghq root\)/\\$\(ghq list \| peco\)'$" >/dev/null
+      if [ $? -eq 0 ]; then
+        echo "already changed."
+      else
+        echo -n "\n" >> $HOME/.bashrc
+        echo 'alias gp='\''cd $(ghq root)/$(ghq list | peco)'\' >> $HOME/.bashrc
+      fi
